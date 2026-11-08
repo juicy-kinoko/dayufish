@@ -1,0 +1,17 @@
+# 绝不上传
+.env
+.env.local
+private/
+*.key
+*.pem
+
+# 引擎产物
+profiles/web/node_modules/
+node_modules/
+sessions/
+storages/
+*.log
+
+# 系统杂物
+.DS_Store
+Thumbs.db
