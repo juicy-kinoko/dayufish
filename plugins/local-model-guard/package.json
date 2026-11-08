@@ -1,0 +1,33 @@
+{
+  "name": "local-model-guard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "lib/index.js",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "dsh": ">=0.2.1-rc.2 <0.3.0-0"
+  },
+  "dshGo": {
+    "v": 1,
+    "title": { "zh": "模型守卫", "en": "Model guard" },
+    "icon": "model",
+    "contributes": {
+      "composer.actions": [
+        { "id": "probe", "label": { "zh": "模型体检", "en": "Probe" }, "icon": "refresh" }
+      ],
+      "panels": [
+        {
+          "id": "guard",
+          "title": { "zh": "模型守卫", "en": "Model guard" },
+          "icon": "model",
+          "placement": ["session.tab", "features"]
+        }
+      ]
+    }
+  }
+}

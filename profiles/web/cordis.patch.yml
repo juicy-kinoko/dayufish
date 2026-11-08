@@ -1,0 +1,168 @@
+# Your patch layer for this dsh profile, applied after every bundle layer:
+# a top-level YAML array of loader patch entries (id-targeted config
+# overrides, disables, and insert lists; `!!js` expressions allowed).
+- id: agent-default-model
+  name: "@deepseek-ai/dsh-agent-default-model"
+  config:
+    provider: deepseek-official
+    model: deepseek-flash
+    reasoningEffort: high
+- id: llm-pi-ai
+  name: "@deepseek-ai/dsh-llm-pi-ai"
+  config:
+    providers:
+      custom-glm5-3:
+        displayName: 智谱GLM5.3
+        api: openai-completions
+        baseURL: https://open.bigmodel.cn/api/paas/v4
+        apiKeyEnv: CUSTOM_GLM5_3_API_KEY
+        models:
+          - id: glm-5.3-flash
+            contextWindow: 200000
+            maxTokens: 32768
+      custom-glm4:
+        displayName: 智谱免费
+        api: openai-completions
+        baseURL: https://open.bigmodel.cn/api/paas/v4
+        apiKeyEnv: CUSTOM_GLM4_API_KEY
+        models:
+          - id: glm-4-flash
+          - id: glm-4.7-flash
+      custom-opaifast:
+        displayName: Pollinations
+        api: openai-completions
+        baseURL: https://text.pollinations.ai/openai
+        apiKeyEnv: CUSTOM_OPAIFAST_API_KEY
+        models:
+          - id: openai-fast
+      custom-qnaigc:
+        displayName: 七牛云
+        api: openai-completions
+        baseURL: https://api.qnaigc.com/v1
+        apiKeyEnv: CUSTOM_QNAIGC_API_KEY
+        models:
+          - id: qiniu/conatus-free
+            contextWindow: 1000000
+            maxTokens: 128000
+          - id: qwen/qwen3.8-flash-next
+            contextWindow: 1000000
+            maxTokens: 128000
+          - id: deepseek/deepseek-v4.1-flash-1017
+            contextWindow: 1000000
+            maxTokens: 128000
+      custom-siliconflow:
+        displayName: 硅基流动
+        api: openai-completions
+        baseURL: https://api.siliconflow.cn/v1
+        apiKeyEnv: CUSTOM_SILICONFLOW_API_KEY
+        models:
+          - id: zai-org/GLM-5.3-Flash
+          - id: Qwen/Qwen3-8B
+          - id: deepseek-ai/DeepSeek-V4-Flash
+          - id: deepseek-ai/DeepSeek-R1-0528-Qwen3-8B
+          - id: THUDM/GLM-Z1-9B-0414
+          - id: tencent/Hunyuan-MT-7B
+          - id: XingChenAGI/Xing4.0-29B
+      custom-ovh:
+        displayName: OVH免费(无key)
+        api: openai-completions
+        baseURL: https://oai.endpoints.kepler.ai.cloud.ovh.net/v1
+        models:
+          - id: gpt-oss-120b
+            contextWindow: 131072
+            maxTokens: 32768
+          - id: Qwen3.8-27B
+            contextWindow: 131072
+            maxTokens: 32768
+          - id: Qwen3.5-397B-A17B
+            contextWindow: 131072
+            maxTokens: 32768
+          - id: Meta-Llama-3_3-70B-Instruct
+            contextWindow: 131072
+            maxTokens: 32768
+          - id: Mistral-Small-3.2-24B-Instruct-2506
+            contextWindow: 131072
+            maxTokens: 32768
+          - id: gpt-oss-20b
+            contextWindow: 131072
+            maxTokens: 32768
+      custom-kilo:
+        displayName: Kilo免费(无key)
+        api: openai-completions
+        baseURL: https://api.kilo.ai/api/gateway/v1
+        models:
+          - id: nvidia/nemotron-3-ultra-550b-a55b:free
+            contextWindow: 1000000
+            maxTokens: 65536
+          - id: nvidia/nemotron-3.5-super-vl:free
+            contextWindow: 262144
+            maxTokens: 32768
+          - id: nvidia/nemotron-3.5-lightning:free
+            contextWindow: 262144
+            maxTokens: 32768
+          - id: kilo-auto/free
+          - id: cohere/north-mini-code:free
+          - id: reflection/beam-free
+          - id: liquid/lfm-3-1.7b:free
+      custom-openrouter:
+        displayName: OpenRouter免费
+        api: openai-completions
+        baseURL: https://openrouter.ai/api/v1
+        apiKeyEnv: CUSTOM_OPENROUTER_API_KEY
+        models:
+          - id: nvidia/nemotron-3-ultra-550b-a55b:free
+            contextWindow: 1000000
+            maxTokens: 65536
+          - id: nvidia/nemotron-3.5-super-vl:free
+            contextWindow: 262144
+            maxTokens: 32768
+          - id: nvidia/nemotron-3.5-lightning:free
+            contextWindow: 262144
+            maxTokens: 32768
+          - id: nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free
+            contextWindow: 262144
+            maxTokens: 32768
+          - id: cohere/north-mini-code:free
+          - id: google/gemma-4-31b-it:free
+          - id: google/gemma-4-26b-a4b-it:free
+          - id: xingchen-agi/xing4.0-29b-a4b:free
+          - id: liquid/lfm-3-1.7b:free
+      custom-modelscope:
+        displayName: 魔搭(需绑阿里云)
+        api: openai-completions
+        baseURL: https://api-inference.modelscope.cn/v1
+        apiKeyEnv: CUSTOM_MODELSCOPE_API_KEY
+        models:
+          - id: deepseek-ai/DeepSeek-V4.1-Flash-1017
+            contextWindow: 1000000
+            maxTokens: 65536
+          - id: Qwen/Qwen3.8-Flash-Next
+            contextWindow: 1000000
+            maxTokens: 65536
+          - id: ZhipuAI/GLM-5.2
+            contextWindow: 200000
+            maxTokens: 32768
+          - id: moonshotai/Kimi-K3.1-Pro
+            contextWindow: 262144
+            maxTokens: 32768
+          - id: MiniMax/MiniMax-M3
+            contextWindow: 512000
+            maxTokens: 32768
+          - id: stepfun-ai/Step-3.7-Flash
+          - id: Qwen/Qwen3.5-35B-A3B
+            contextWindow: 256000
+            maxTokens: 32768
+- id: web-search-deepseek
+  name: "@deepseek-ai/dsh-web-search-deepseek"
+  config:
+    apiKeyEnv: DEEPSEEK_API_KEY
+    maxUses: 20
+- id: agent-preset-registry
+  name: "@deepseek-ai/dsh-agent-preset-registry"
+  config:
+    default: standard
+    selectedDefault: dsh-go-companion-full
+
+- insert:
+    - id: engine-guard-probe
+      name: engine-guard-probe

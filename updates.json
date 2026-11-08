@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "releasedAt": "2026-11-08T21:20:00+08:00",
+  "notes": "首个公开快照：复活包 + 记忆树 + 自动更新协议（轻包，未封装）",
+  "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
+  "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
+  "sha256": "",
+  "minEngine": "0.2.2"
+}
