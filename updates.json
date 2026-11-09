@@ -1,7 +1,7 @@
 {
-  "version": "1.0.9",
-  "releasedAt": "2026-11-09T12:05:00+08:00",
-  "notes": "1.0.9：种子附录「本版本本体」——v1.0.8 公开快照 base64 内嵌，断网可还原",
+  "version": "1.0.10",
+  "releasedAt": "2026-11-09T11:28:04+08:00",
+  "notes": "1.0.10：记忆树六区三层、记忆温度与冷数据、子鱼自更新脚本",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
