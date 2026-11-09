@@ -128,10 +128,13 @@ if [ "${1:-}" != "--no-tag" ]; then
   VER="$(cat version.txt 2>/dev/null | tr -d '\n')"
   if [ -n "$VER" ] && ! git rev-parse "v$VER" >/dev/null 2>&1; then
     git tag -f "v$VER" "$PUB" >/dev/null 2>&1
-    for r in "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish.git" \
-             "https://oauth2:${GITCODE_TOKEN:-}@gitcode.com/${GITCODE_USER}/dayufish.git"; do
-      timeout 60 git push --force --quiet "$r" "v$VER" 2>/dev/null && echo "  🏷 v$VER → ${r%%@*}"
-    done
+    # 注意：URL 里有 token，日志与终端只打名字，绝不打印地址
+    if timeout 60 git push --force --quiet "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish.git" "v$VER" 2>/dev/null; then
+      echo "  🏷 v$VER → GitHub"
+    fi
+    if [ -n "${GITCODE_TOKEN:-}" ] && timeout 60 git push --force --quiet "https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITCODE_USER}/dayufish.git" "v$VER" 2>/dev/null; then
+      echo "  🏷 v$VER → GitCode"
+    fi
   fi
 fi
 

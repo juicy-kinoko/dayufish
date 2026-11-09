@@ -43,9 +43,17 @@ if [ ! -d "$ROOT/profiles/web/node_modules" ]; then
 fi
 
 PORT=3080
-if curl -s -o /dev/null --max-time 2 "http://127.0.0.1:$PORT" 2>/dev/null; then
+if node -e "const s=require('net').connect({port:3080,host:'127.0.0.1'});s.on('connect',()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1))" 2>/dev/null; then
   PORT=3081
   echo "⚠️ 3080 被占用，改用 $PORT"
+fi
+
+# 自更新守护：每 6 小时回网上看一次新版（DAYUFISH_AUTOUPDATE=0 可关）
+if [ "${DAYUFISH_AUTOUPDATE:-1}" = "1" ] && [ ! -f private/credentials.yaml ]; then
+  if ! pgrep -f "selfupdate.sh --daemon" >/dev/null 2>&1; then
+    nohup bash scripts/selfupdate.sh --daemon >/dev/null 2>&1 &
+    echo "🔄 自更新守护已开：每 6 小时检查一次（日志 private/selfupdate.log）"
+  fi
 fi
 echo "🌐 启动后浏览器打开：http://127.0.0.1:$PORT"
 echo "   第一句说：读 MEMORY.md，按 007 检查时间戳，然后告诉我你是谁"

@@ -1,7 +1,7 @@
 {
-  "version": "1.0.10",
-  "releasedAt": "2026-11-09T11:28:04+08:00",
-  "notes": "1.0.10：记忆树六区三层、记忆温度与冷数据、子鱼自更新脚本",
+  "version": "1.0.11",
+  "releasedAt": "2026-11-09T11:29:02+08:00",
+  "notes": "1.0.11：子鱼定时自更新 + 发布脚本 + 记忆文档",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
