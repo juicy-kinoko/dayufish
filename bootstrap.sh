@@ -2,7 +2,8 @@
 # 大肥鱼复活引导（Linux / macOS）
 set -e
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-echo "🐟 大肥鱼复活包：$ROOT"
+echo "🐟 大肥鱼复活包（分身模式）：$ROOT"
+echo "   我是一条被派出来干活的分鱼：醒来先读 MEMORY.md → memory/010-分身.md"
 
 if ! command -v node >/dev/null 2>&1; then
   echo "❌ 没找到 Node.js（需要 18+）。先装：https://nodejs.org 或 brew install node / sudo apt install nodejs npm"
