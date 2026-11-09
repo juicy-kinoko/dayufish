@@ -1,7 +1,7 @@
 {
-  "version": "1.0.2",
-  "releasedAt": "2026-11-09T10:55:00+08:00",
-  "notes": "1.0.2：种子优化——新增 SEED.md（给 agent 直接读）、README 加一键行、公开版 key 说明修正、启动脚本加 Node 版本/端口自检",
+  "version": "1.0.3",
+  "releasedAt": "2026-11-09T11:05:00+08:00",
+  "notes": "1.0.3：免费 key 池（.env.free）+ keys.md 申请地址表；种子开箱即用",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
