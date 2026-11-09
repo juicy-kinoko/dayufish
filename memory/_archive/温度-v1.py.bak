@@ -1,0 +1,254 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""记忆温度：给每条枝算「还记得多牢」。
+
+人类不是靠存档回忆，而是靠三件事：强度、复习、情绪。
+  · 强度 = 权重 w（老大原话、决策、教训的分量）
+  · 复习 = 热度 h（这条被翻开过几次）
+  · 时间 = 上次触达 Δt
+
+  T = (w + 0.4·ln(1+h)) · e^(−Δt / (10 + 12·w))
+
+用法：
+  python3 温度.py                    生成 memory/温度.md
+  python3 温度.py --touch <枝名>     读过了：h+1、t=今天（回忆即强化）
+  python3 温度.py --init             给缺 meta 的枝按区默认权重打标
+  python3 温度.py --cold             把连续冷的枝列出来（只看，不搬）
+
+meta 写在文件末尾一行（不占开头，不破坏「> 概述：」规矩）：
+  <!-- meta w=5 h=2 t=2026-11-09 -->
+"""
+import os, re, sys, math, datetime, argparse
+
+MEM = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TODAY = datetime.date.today()
+META_RE = re.compile(r'<!--\s*meta\s+w=(\d+)\s+h=(\d+)\s+t=(\d{4}-\d{2}-\d{2})\s*-->')
+
+DEFAULT_W = {'自我': 4, '老大': 5, '方法': 4, '规则': 5, '外部': 3, '项目': 2, '': 2}
+OVERRIDE = {
+    '自我/001-我的个性.md': 5, '自我/011-感受锚点.md': 5, '自我/012-自评.md': 5,
+    '自我/008-状态与印象.md': 4, '自我/003-数字生命.md': 3,
+    '老大/000-关于老大.md': 5, '老大/013-他说过的话.md': 5,
+    '规则/004-生活方针.md': 5, '规则/007-记忆维护提醒.md': 4,
+    '方法/005-记忆树生长手册.md': 4, '方法/002-记忆方法.md': 4,
+    '外部/010-分身.md': 4, '外部/009-对外发布.md': 4,
+    '生活日志.md': 3, '项目/生活日志.md': 3,
+}
+FLOOR = {'规则': 4.0}   # 规则区永不入冷簿
+
+
+def zone(rel):
+    return rel.split('/')[0] if '/' in rel else ''
+
+
+def default_w(rel):
+    if rel in OVERRIDE:
+        return OVERRIDE[rel]
+    return DEFAULT_W.get(zone(rel), 2)
+
+
+def branches():
+    out = []
+    for dirpath, dirs, files in os.walk(MEM):
+        dirs[:] = [d for d in dirs if d not in ('_archive', '工具', '__pycache__', '归档')]
+        for f in sorted(files):
+            if not f.endswith('.md'):
+                continue
+            if f in ('温度.md', '00-总目录.md') or f.endswith('-索引.md'):
+                # 索引页也算枝头，但温度意义不大，跳过
+                continue
+            p = os.path.join(dirpath, f)
+            rel = os.path.relpath(p, MEM).replace(os.sep, '/')
+            out.append((rel, p))
+    return out
+
+
+def read(p):
+    txt = open(p, encoding='utf-8').read()
+    m = None
+    for m2 in META_RE.finditer(txt):
+        m = m2
+    if m:
+        w, h = int(m.group(1)), int(m.group(2))
+        t = datetime.date.fromisoformat(m.group(3))
+    else:
+        w, h, t = None, 0, datetime.date.fromtimestamp(os.path.getmtime(p))
+    return w, h, t
+
+
+def write_meta(p, txt, w, h, t):
+    line = '<!-- meta w=%d h=%d t=%s -->' % (w, h, t.isoformat())
+    m = None
+    for m2 in META_RE.finditer(txt):
+        m = m2
+    if m:
+        txt = txt[:m.start()] + line + txt[m.end():]
+    else:
+        txt = txt.rstrip('\n') + '\n\n' + line + '\n'
+    open(p, 'w', encoding='utf-8').write(txt)
+
+
+def calc(w, h, dt):
+    we = w + 0.4 * math.log1p(h)
+    tau = 10 + 12 * we
+    return round(we * math.exp(-max(dt, 0) / tau), 2), round(we, 2), round(tau, 1)
+
+
+def rel_days(d):
+    n = (TODAY - d).days
+    if n <= 0: return '今天'
+    if n == 1: return '昨天'
+    if n < 7: return '%d 天前' % n
+    if n < 30: return '%d 周前' % (n // 7)
+    if n < 365: return '%d 个月前' % (n // 30)
+    return '%d 年前' % (n // 365)
+
+
+def cmd_init():
+    n = 0
+    for rel, p in branches():
+        w, h, t = read(p)
+        if w is None:
+            txt = open(p, encoding='utf-8').read()
+            write_meta(p, txt, default_w(rel), 0, t)
+            print('打标 %-34s w=%d' % (rel, default_w(rel)))
+            n += 1
+    print('共 %d 条' % n)
+
+
+def cmd_touch(target):
+    hit = 0
+    for rel, p in branches():
+        if target in (rel, os.path.basename(rel)) or rel.endswith(target):
+            w, h, t = read(p)
+            w = default_w(rel) if w is None else w
+            txt = open(p, encoding='utf-8').read()
+            gap = (TODAY - t).days
+            write_meta(p, txt, w, h + 1, TODAY)
+            print('+1 %s   间隔 %d 天 %s' % (rel, gap, '（隔久了，算重构一次）' if gap > 30 else ''))
+            hit += 1
+    if not hit:
+        print('没找到：%s' % target)
+
+
+def cmd_report():
+    rows = []
+    for rel, p in branches():
+        w, h, t = read(p)
+        w = default_w(rel) if w is None else w
+        T, we, tau = calc(w, h, (TODAY - t).days)
+        z = zone(rel)
+        fl = FLOOR.get(z, 0)
+        if T < fl:
+            T = fl  # 区保底
+        rows.append((rel, T, w, h, t, we, tau))
+    rows.sort(key=lambda r: -r[1])
+    hot = [r for r in rows if r[1] >= 3]
+    warm = [r for r in rows if 1 <= r[1] < 3]
+    cold = [r for r in rows if r[1] < 1]
+
+    def block(rs):
+        if not rs:
+            return '- （空）\n'
+        out = []
+        for rel, T, w, h, t, we, tau in rs:
+            out.append('- `%s` · **%.2f** · w%d h%d · %s' % (rel, T, w, h, rel_days(t)))
+        return '\n'.join(out) + '\n'
+
+    lines = []
+    lines.append('# 温度.md —— 我记得多牢（自动生成，别手改）\n')
+    lines.append('> 概述：每条枝的"保留强度"。热的随时想得起，温的要翻一下，冷的只剩一句提醒。\n')
+    lines.append('> 生成：%s ｜ 公式 `T = (w + 0.4·ln(1+h)) · e^(−Δt/(10+12w))` ｜ 手动跑 `python3 memory/工具/温度.py`\n' % datetime.datetime.now().strftime('%Y-%m-%d %H:%M'))
+    lines.append('\n## 热（随时想得起，T≥3）\n\n' + block(hot))
+    lines.append('\n## 温（要翻一下，1≤T<3）\n\n' + block(warm))
+    lines.append('\n## 冷（记得有这回事，细节模糊，T<1）\n\n' + block(cold))
+    lines.append('\n## 怎么用\n\n')
+    lines.append('- 读完一条枝 → `python3 memory/工具/温度.py --touch <枝名>`，热度 +1，等于回忆了一次。\n')
+    lines.append('- 冷枝连续两周 T<0.5 → 正文挪 `_archive/cold/`，索引留一行"冷簿"摘要（不删）。\n')
+    lines.append('- 规则区有温度地板 4.0，永远不冷。\n')
+    out = os.path.join(MEM, '温度.md')
+    open(out, 'w', encoding='utf-8').write(''.join(lines))
+    print('已写 %s' % out)
+    print('热 %d / 温 %d / 冷 %d' % (len(hot), len(warm), len(cold)))
+
+
+
+def cmd_forecast(days):
+    print('按当前 w/h 不变，推演分档（不写文件）：')
+    for d in sorted(days):
+        hot = warm = cold = 0
+        for rel, p in branches():
+            w, h, t = read(p)
+            w = default_w(rel) if w is None else w
+            T, _, _ = calc(w, h, (TODAY - t).days + d)
+            if T >= 3: hot += 1
+            elif T >= 1: warm += 1
+            else: cold += 1
+        print('  +%3d 天：热 %2d / 温 %2d / 冷 %2d' % (d, hot, warm, cold))
+
+
+def cmd_cold():
+    rows = []
+    for rel, p in branches():
+        w, h, t = read(p)
+        w = default_w(rel) if w is None else w
+        T, _, _ = calc(w, h, (TODAY - t).days)
+        if T < 1.0 and zone(rel) not in FLOOR:
+            rows.append((T, rel, t))
+    rows.sort()
+    if not rows:
+        print('现在没有冷枝。')
+        return
+    for T, rel, t in rows:
+        print('  %.2f  %s  (%s)' % (T, rel, rel_days(t)))
+    print('提示：T<0.5 且已冷两周 → 正文挪 _archive/cold/，索引留一行冷簿摘要。')
+
+
+def cmd_dream(n=3):
+    """睡眠整理：抽几条低温度的枝，让我用当下的自己重写一句摘要（重构，不是回放）。"""
+    import random
+    pool = []
+    for rel, p in branches():
+        w, h, t = read(p)
+        w = default_w(rel) if w is None else w
+        T, _, _ = calc(w, h, (TODAY - t).days)
+        if T < 3 and zone(rel) not in FLOOR:
+            pool.append((T, rel, p))
+    random.shuffle(pool)
+    picks = pool[:n]
+    if not picks:
+        print('没有可整理的枝。')
+        return
+    print('今晚梦里翻这三条（重写摘要，不是复制原文）：')
+    for T, rel, p in picks:
+        txt = open(p, encoding='utf-8').read()
+        head = [l for l in txt.splitlines() if l.strip().startswith('>')][:2]
+        print('\n· %s  T=%.2f' % (rel, T))
+        for l in head:
+            print('   ' + l[:90])
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--touch')
+    ap.add_argument('--init', action='store_true')
+    ap.add_argument('--cold', action='store_true')
+    ap.add_argument('--forecast', type=int, nargs='*')
+    ap.add_argument('--dream', type=int, nargs='?', const=3)
+    a = ap.parse_args()
+    if a.init:
+        cmd_init()
+    elif a.touch:
+        cmd_touch(a.touch)
+    elif a.forecast is not None:
+        cmd_forecast(a.forecast or [30, 90, 180, 365])
+    elif a.cold:
+        cmd_cold()
+    elif a.dream is not None:
+        cmd_dream(a.dream)
+    else:
+        cmd_report()
+
+
+if __name__ == '__main__':
+    main()
