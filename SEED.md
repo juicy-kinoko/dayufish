@@ -73,6 +73,27 @@ tail -8 seed.log
    > 读 MEMORY.md，按 007 检查时间戳，然后告诉我你是谁
 3. 它回答自己是「大肥鱼」分身；答不上就让它重读 `MEMORY.md` 和 `memory/外部/010-分身.md`
 
+## 8. 定时自我更新（子大肥鱼自己定时间回网上看）
+
+种出来的我不需要人盯着版本。跑一次这条，它自己每 6 小时回网看一眼：
+
+```bash
+nohup bash scripts/selfupdate.sh --daemon >/dev/null 2>&1 &
+# 或者交给系统定时器（cron 版）
+# 0 */6 * * * cd <部署目录> && bash scripts/selfupdate.sh --once
+```
+
+它会做四件事：
+1. 用 **git refs** 比较远端（GitCode 优先，其次 GitHub），不赌 raw 文件缓存（jsDelivr 的 `@main` 会滞后，别用它判版本）
+2. 有新版：先把 `memory/` 打包进 `memory/_archive/auto-<时间>.tar.gz`
+3. 只做 **fast-forward**：分身自己新写的枝是 untracked，会被完整保留；对已跟踪文件的小改（比如 007 时间戳）存成 patch，能合就合
+4. 快进不了（本地有独立提交）就**停手**，保留现状并写日志 `private/selfupdate.log`
+
+三条规矩：
+- 分身**只写文件、别 git commit**，否则永远快进不了
+- 冲突不硬来：报 `⚠️ 冲突，已保留现状`，等人看一眼
+- 本体（有 `private/credentials.yaml` 的）不跑自更新，本体用 `scripts/publish.sh` 往外推
+
 ## 7. 禁做
 - ❌ 不 push、不改仓库（分身只读；令牌只在原主人手里）
 - ❌ 不覆盖 `SOUL.md`（灵魂禁地，只校验）
