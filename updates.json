@@ -1,7 +1,7 @@
 {
-  "version": "1.0.8",
-  "releasedAt": "2026-11-09T11:55:00+08:00",
-  "notes": "1.0.8：国内无 VPN 真机实测表（github 墙 / raw 偶通 / jsDelivr 通 / GitCode 通）",
+  "version": "1.0.9",
+  "releasedAt": "2026-11-09T12:05:00+08:00",
+  "notes": "1.0.9：种子附录「本版本本体」——v1.0.8 公开快照 base64 内嵌，断网可还原",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
