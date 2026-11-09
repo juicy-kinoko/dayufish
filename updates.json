@@ -1,7 +1,7 @@
 {
-  "version": "1.0.4",
-  "releasedAt": "2026-11-09T11:15:00+08:00",
-  "notes": "1.0.4：SEED.md 升级为 AI 执行手册（自检+兜底+后台启动+验证+失败对照），真正可一键扔给 AI",
+  "version": "1.0.5",
+  "releasedAt": "2026-11-09T11:25:00+08:00",
+  "notes": "1.0.5：国内无 VPN 通道实测入册——jsDelivr 读种子 + GitCode 镜像克隆",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",

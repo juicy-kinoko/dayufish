@@ -23,8 +23,11 @@ curl --version >/dev/null && echo curl-ok
 
 ## 2. 拿代码（二选一）
 ```bash
+# 国内无 VPN 优先用 GitCode 镜像（同步自 GitHub，实测可克隆）：
+# git clone --depth 1 https://gitcode.com/Yang_Zeekai/dayufish.git && cd dayufish
+# 有 VPN / 海外机器：
 git clone --depth 1 https://github.com/juicy-kinoko/dayufish.git && cd dayufish
-# 或
+# 没有 git：
 curl -fsSL https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz | tar xz && cd dayufish-main
 ```
 自检：`ls bootstrap.sh SEED.md MEMORY.md` 三个都在。
@@ -40,6 +43,17 @@ cp .env.free .env
 npm i -g @deepseek-ai/dsh --no-fund --no-audit
 ```
 **兜底**：EACCES 权限报错 → `npm config set prefix ~/.npm-global && export PATH="$HOME/.npm-global/bin:$PATH"` 再重跑；下载慢 → `npm config set registry https://registry.npmmirror.com` 再重跑。
+
+
+## 国内无 VPN 怎么办（实测可用）
+- **读种子给 AI**：`https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/SEED.md`（jsDelivr 国内直连，无 token）
+- **拿代码**（GitCode 国内镜像，与主仓同步）：
+  ```bash
+  git clone --depth 1 https://gitcode.com/Yang_Zeekai/dayufish.git && cd dayufish
+  ```
+- 之后照第 3~6 步走；npm 自动用国内 registry（第 4 步兜底里有），缺 Node 用国内 apt/官方安装包
+- 备用读法：单文件走 jsDelivr，如 `https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/keys.md`
+- 注意：GitHub 主仓 raw 在国内需要 VPN；Gitee 镜像私有，不要当公开源
 
 ## 5. 启动（必须放后台）
 ```bash
