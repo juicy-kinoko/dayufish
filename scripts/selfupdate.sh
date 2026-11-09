@@ -67,6 +67,7 @@ do_check() {
   mkdir -p memory/_archive
   tar czf "memory/_archive/auto-$ts.tar.gz" --exclude='_archive' memory 2>/dev/null \
     && log "更新前备份记忆：memory/_archive/auto-$ts.tar.gz"
+  ls -1t memory/_archive/auto-*.tar.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
 
   # 工作区里对已跟踪文件的改动（比如 007 时间戳）先存 patch，别挡更新；新写的枝是 untracked，不受影响
   wip=""

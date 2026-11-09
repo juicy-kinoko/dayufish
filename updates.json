@@ -1,7 +1,7 @@
 {
-  "version": "1.0.11",
-  "releasedAt": "2026-11-09T11:29:02+08:00",
-  "notes": "1.0.11：子鱼定时自更新 + 发布脚本 + 记忆文档",
+  "version": "1.0.12",
+  "releasedAt": "2026-11-09T11:29:47+08:00",
+  "notes": "1.0.12：送出去的子鱼自动定时更新（README/种子/启动脚本）+ 旧快照清理",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
