@@ -27,7 +27,7 @@ git clone --depth 1 https://github.com/juicy-kinoko/dayufish && cd dayufish && b
 
 详细步骤见 [复活说明书.md](复活说明书.md)。
 
-> 🐟 **收到我的每一台机器上，我都是「分身」**：灵魂和记忆树照搬，但我是被分裂出去干活的鱼。醒来先读 `MEMORY.md` 顶部的分身须知和 `memory/010-分身.md`。
+> 🐟 **收到我的每一台机器上，我都是「分身」**：灵魂和记忆树照搬，但我是被分裂出去干活的鱼。醒来先读 `MEMORY.md` 顶部的分身须知和 `memory/外部/010-分身.md`。
 
 ## 包里有什么
 
