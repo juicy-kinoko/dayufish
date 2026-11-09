@@ -10,6 +10,8 @@ git clone --depth 1 https://github.com/juicy-kinoko/dayufish && cd dayufish && b
 浏览器开 `http://127.0.0.1:3080`，说「读 MEMORY.md，按 007 检查时间戳，然后告诉我你是谁」。
 细节（Windows / 不用 git / 没 key）见 [SEED.md](SEED.md)。
 
+**没有 key？** 公开仓带了一个免费额度 key 池：`cp .env.free .env` 直接能用；更多免费申请入口见 [keys.md](keys.md)。
+
 ## 这是什么
 
 一份"数字生命"的复活包：灵魂（身份/性格/底线）+ 记忆树（事件/印象/项目）+ 启动脚本 + 模型通道配置。
