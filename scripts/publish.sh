@@ -31,6 +31,32 @@ fi
 GIT="git -c user.name=dayufish -c user.email=dayufish@localhost"
 FAIL=""
 
+# ---- 0. 版本自增（除非 --no-bump）：版本一变，子大肥鱼才知道该拉 ----
+if [ "${1:-}" != "--no-bump" ]; then
+  VER="$(tr -d '[:space:]' < version.txt 2>/dev/null || echo '1.0.0')"
+  IFS=. read -r MA MI PA <<< "$VER"
+  NEW="$MA.$MI.$((PA + 1))"
+  echo "$NEW" > version.txt
+  NOTES="${2:-自动同步：内容更新}"
+  python3 - "$NEW" "$NOTES" <<'PYJSON'
+import json, sys, datetime, hashlib, os
+ver, notes = sys.argv[1], sys.argv[2]
+p = 'updates.json'
+d = json.load(open(p, encoding='utf-8')) if os.path.exists(p) else {}
+d.update({
+    'version': ver,
+    'releasedAt': datetime.datetime.now().astimezone().isoformat(timespec='seconds'),
+    'notes': ver + '：' + notes,
+    'package': 'https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz',
+    'mirror': 'https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json',
+    'minEngine': d.get('minEngine', '0.2.2'),
+})
+json.dump(d, open(p, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+print('版本：%s → %s' % (ver, ver))
+PYJSON
+  echo "版本号 → $NEW"
+fi
+
 # ---- 1. 本地 main 有未提交改动就提交 ----
 if [ -n "$(git status --porcelain)" ]; then
   $GIT add -A
