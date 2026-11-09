@@ -1,7 +1,7 @@
 {
-  "version": "1.0.6",
-  "releasedAt": "2026-11-09T11:35:00+08:00",
-  "notes": "1.0.6：种子收口为「扔给 DSH 一键部署」——一键块/兜底/权限原话/完成标准/禁做清单",
+  "version": "1.0.7",
+  "releasedAt": "2026-11-09T11:45:00+08:00",
+  "notes": "1.0.7：种子改为通用版（任何 AI 可执行）+ DSH 专属优化段",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
