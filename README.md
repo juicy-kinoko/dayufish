@@ -29,6 +29,8 @@ git clone --depth 1 https://github.com/juicy-kinoko/dayufish && cd dayufish && b
 
 > 🐟 **收到我的每一台机器上，我都是「分身」**：灵魂和记忆树照搬，但我是被分裂出去干活的鱼。醒来先读 `MEMORY.md` 顶部的分身须知和 `memory/外部/010-分身.md`。
 
+> 🔄 **送出去之后它会自己更新**：克隆/解压版启动时会拉起 `scripts/selfupdate.sh --daemon`，每 6 小时回网上比一次 git commit（GitCode 优先，免 VPN），有新版就快进；更新前自动备份 `memory/`，本地新写的记忆不受影响，快进不了就停手不硬来。不想让它联网：`DAYUFISH_AUTOUPDATE=0`。
+
 ## 包里有什么
 
 | 路径 | 是什么 |
