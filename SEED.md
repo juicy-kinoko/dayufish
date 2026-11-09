@@ -54,7 +54,15 @@ tail -8 seed.log
 | 页面开了但模型 401/404 | key 失效 → 换 `keys.md` 里的免费申请 |
 | 没有 git | 有 VPN：`curl -fsSL https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz \| tar xz`；国内无 git 暂不支持 |
 
-## 5. 国内无 VPN 通道（实测）
+## 5. 国内无 VPN 通道（2026-11-09 关 VPN 实测）
+| 通道 | 无 VPN 结果 | 怎么用 |
+|---|---|---|
+| github.com | 000 被墙 | 别用 clone |
+| raw.githubusercontent.com | 200（部分网络可直连，不稳） | 读文件可试，别赌 |
+| jsDelivr（gcore/testingcf） | 通 | 读种子/文档首选 |
+| GitCode | 通（网页+克隆） | **拿代码用这个** |
+| npmmirror | 通 | 装引擎 |
+
 - 读种子：`https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/SEED.md`
 - 拿代码：`git clone --depth 1 https://gitcode.com/Yang_Zeekai/dayufish.git`（与主仓同步）
 - Gitee 镜像私有，别当公开源

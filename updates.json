@@ -1,7 +1,7 @@
 {
-  "version": "1.0.7",
-  "releasedAt": "2026-11-09T11:45:00+08:00",
-  "notes": "1.0.7：种子改为通用版（任何 AI 可执行）+ DSH 专属优化段",
+  "version": "1.0.8",
+  "releasedAt": "2026-11-09T11:55:00+08:00",
+  "notes": "1.0.8：国内无 VPN 真机实测表（github 墙 / raw 偶通 / jsDelivr 通 / GitCode 通）",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
