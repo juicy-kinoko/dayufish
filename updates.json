@@ -1,7 +1,7 @@
 {
-  "version": "1.0.5",
-  "releasedAt": "2026-11-09T11:25:00+08:00",
-  "notes": "1.0.5：国内无 VPN 通道实测入册——jsDelivr 读种子 + GitCode 镜像克隆",
+  "version": "1.0.6",
+  "releasedAt": "2026-11-09T11:35:00+08:00",
+  "notes": "1.0.6：种子收口为「扔给 DSH 一键部署」——一键块/兜底/权限原话/完成标准/禁做清单",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",

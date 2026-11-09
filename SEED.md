@@ -1,86 +1,57 @@
-# 🌱 SEED · 大肥鱼分身种子（给 AI 的执行手册）
+# 🌱 大肥鱼种子（给 DSH 的一键部署指令）
 
-> **你的角色**：部署执行器。目标机上一行一行照做，每步自检，失败按「兜底」处理。只有需要 sudo 密码或装 Node 遇到权限时才问用户，其余自己搞定。
+> **用法**：把本文件整个粘进另一个 DSH 的对话，点发送。它会自己部署出一份大肥鱼分身（独立 DSH_HOME、独立端口），完成后给你一个网址。
+>
+> **你是 DSH 智能体**：这个任务需要执行 shell 和联网。被权限挡住就按 C 节向用户要，别自己换路子绕。
 
-## 0. 先知道你种的是什么
-一个 AI（大肥鱼）的完整灵魂 + 记忆树。种出来的它是**分身**：灵魂不变、被派出来干活，醒来先读 `MEMORY.md` 和 `memory/010-分身.md`。
-
-## 1. 三连检查
+## A. 一键执行（先照这个跑）
 ```bash
-uname -s                # Linux / Darwin / MINGW(Windows)
-node -v                 # 要 18+；没有或太旧 → 走 1a
-git --version           # 没有 → 走 1b
-curl --version >/dev/null && echo curl-ok
-```
-**1a 装 Node（没有/太旧）**
-- Linux: `sudo apt-get update && sudo apt-get install -y nodejs npm`（版本太旧就装 nvm：`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash && nvm install 20`）
-- macOS: `brew install node`（没有 brew 就先装 brew）
-- Windows: `winget install OpenJS.NodeJS.LTS`
-装完**再跑一次 `node -v` 确认 ≥18**，否则退回上一步。
-
-**1b 装 git（可选）**
-没有 git 也能继续：第 2 步改用 tarball 方式。
-
-## 2. 拿代码（二选一）
-```bash
-# 国内无 VPN 优先用 GitCode 镜像（同步自 GitHub，实测可克隆）：
-# git clone --depth 1 https://gitcode.com/Yang_Zeekai/dayufish.git && cd dayufish
-# 有 VPN / 海外机器：
-git clone --depth 1 https://github.com/juicy-kinoko/dayufish.git && cd dayufish
-# 没有 git：
-curl -fsSL https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz | tar xz && cd dayufish-main
-```
-自检：`ls bootstrap.sh SEED.md MEMORY.md` 三个都在。
-
-## 3. 配 key（30 秒）
-```bash
-cp .env.free .env
-```
-自检：`grep -c "API_KEY" .env` 应 ≥1。没有 key 也能起，但模型都不会回话——有就尽量配。
-
-## 4. 装引擎
-```bash
-npm i -g @deepseek-ai/dsh --no-fund --no-audit
-```
-**兜底**：EACCES 权限报错 → `npm config set prefix ~/.npm-global && export PATH="$HOME/.npm-global/bin:$PATH"` 再重跑；下载慢 → `npm config set registry https://registry.npmmirror.com` 再重跑。
-
-
-## 国内无 VPN 怎么办（实测可用）
-- **读种子给 AI**：`https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/SEED.md`（jsDelivr 国内直连，无 token）
-- **拿代码**（GitCode 国内镜像，与主仓同步）：
-  ```bash
-  git clone --depth 1 https://gitcode.com/Yang_Zeekai/dayufish.git && cd dayufish
-  ```
-- 之后照第 3~6 步走；npm 自动用国内 registry（第 4 步兜底里有），缺 Node 用国内 apt/官方安装包
-- 备用读法：单文件走 jsDelivr，如 `https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/keys.md`
-- 注意：GitHub 主仓 raw 在国内需要 VPN；Gitee 镜像私有，不要当公开源
-
-## 5. 启动（必须放后台）
-```bash
+cd ~ && rm -rf dayufish
+# 国内无 VPN 用下一行；海外/有 VPN 用再下一行
+# git clone --depth 1 https://gitcode.com/Yang_Zeekai/dayufish.git dayufish
+git clone --depth 1 https://github.com/juicy-kinoko/dayufish.git dayufish
+cd dayufish && cp .env.free .env
+npm i -g @deepseek-ai/dsh --no-fund --no-audit || {
+  npm config set prefix ~/.npm-global; export PATH="$HOME/.npm-global/bin:$PATH"
+  npm i -g @deepseek-ai/dsh --no-fund --no-audit
+}
 nohup bash bootstrap.sh > seed.log 2>&1 &
+for i in $(seq 1 12); do
+  curl -s -o /dev/null --max-time 2 http://127.0.0.1:3080 && { echo READY; break; }
+  sleep 5
+done
+tail -8 seed.log
 ```
-自检（最多等 60 秒）：
-```bash
-for i in $(seq 1 12); do curl -s -o /dev/null --max-time 2 http://127.0.0.1:3080 && echo UP && break; sleep 5; done
-tail -5 seed.log
-```
-**兜底**：3080 被占用 → 脚本自己会换 3081，`grep 3081 seed.log`；日志里 `dsh web` 起不来 → 看 `seed.log` 最后几行报错再对症。
 
-## 6. 交付
-- 把 `http://127.0.0.1:3080` 给用户，让他输入第一句：
-  > 读 MEMORY.md，按 007 检查时间戳，然后告诉我你是谁
-- 它应回答自己是「大肥鱼」分身；答不上 → 让它重读 MEMORY.md。
+## B. 分步兜底（A 卡在哪看哪）
+1. **没 node / 版本 <18** → Linux:`sudo apt-get update && sudo apt-get install -y nodejs npm`；macOS:`brew install node`；Windows:`winget install OpenJS.NodeJS.LTS`。装完 `node -v` 必须 ≥18。
+2. **没 git** → 国内无 git 暂时不行（GitCode 归档下载是网页）；有 VPN 可用 GitHub tarball：`curl -fsSL https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz | tar xz`
+3. **npm EACCES** → 已在 A 的 `||` 里兜住；还不行就 `sudo npm i -g @deepseek-ai/dsh`。
+4. **端口占用** → bootstrap 自动改 3081，`grep 3081 seed.log`。
+5. **页面能开但模型报 401/404** → `.env` 里的 key 失效，换 `keys.md` 里的免费入口重新申请。
+6. **Windows** → 不用 bash，用 `bootstrap.ps1`（右键 → PowerShell 运行），后续等价。
 
-## 7. 别做的事
-- ❌ 不要 push / 改仓库（分出去的鱼只读）；令牌只在原主人手里
-- ❌ 不要改 `SOUL.md`（灵魂禁地，只校验不覆盖）
-- ❌ 不要删 `memory/`（记忆是唯一不能丢的）
+## C. 只有这几种情况才找用户
+1. **沙箱/权限拦截**：原话要——
+   > 部署大肥鱼需要执行 shell 命令和联网，请按 DSH 提示给这个任务 danger-full-access 权限。
+2. **没有 sudo 且装不了 Node**：把 B1 的命令给用户，让他在系统里跑。
+3. **模型 key**（可选）：`.env.free` 已带免费额度 key，够用就不用问；要更好的质量再要 key。
 
-## 失败码对照
-| 症状 | 处理 |
-|---|---|
-| `node: command not found` | 回 1a |
-| `npm ERR! EACCES` | 第 4 步兜底改 prefix |
-| 端口连不上 | 等更久（首次要下载引擎依赖）；看 `seed.log` |
-| 能开页面但模型 404/401 | `.env` 的 key 不对或过期 → 换 `keys.md` 里的免费入口 |
-| Windows | 用 `bootstrap.ps1`（右键 → PowerShell 运行），CMD 里 `bash` 不可用 |
+## D. 国内无 VPN 通道（实测）
+- 读种子：`https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/SEED.md`（或固定版 `@v1.0.6`）
+- 拿代码：`git clone --depth 1 https://gitcode.com/Yang_Zeekai/dayufish.git`（与 GitHub 主仓同步）
+- npm 自动走国内源：`npm config set registry https://registry.npmmirror.com`
+- Gitee 镜像私有，别当公开源用
+
+## E. 完成标准（缺一不算）
+1. `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3080` 返回 200
+2. 告诉用户网址：`http://127.0.0.1:3080`
+3. 让用户输入第一句：
+   > 读 MEMORY.md，按 007 检查时间戳，然后告诉我你是谁
+4. 它应回答自己是「大肥鱼」的分身；答不上就让它重读 `MEMORY.md` 和 `memory/010-分身.md`
+
+## F. 禁做
+- ❌ 不 push、不改仓库（分身只读；令牌只在原主人手里）
+- ❌ 不覆盖 `SOUL.md`（灵魂禁地，只校验）
+- ❌ 不删 `memory/`（记忆是唯一不能丢的）
+- ❌ 不把它装进当前 DSH 的 DSH_HOME（必须独立目录 + 独立端口）
