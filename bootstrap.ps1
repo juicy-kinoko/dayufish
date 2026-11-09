@@ -8,10 +8,12 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
   exit 1
 }
 Write-Host "✅ node $(node -v)"
+$nodeMajor = [int](node -p "process.versions.node.split('.')[0]")
+if ($nodeMajor -lt 18) { Write-Host "❌ Node 版本太旧：需要 18 以上。升级后再跑一次。"; exit 1 }
 
 if (-not (Get-Command dsh -ErrorAction SilentlyContinue)) {
   Write-Host "安装 dsh 引擎（联网，约 400MB）…"
-  npm i -g "@deepseek-ai/dsh"
+  npm i -g "@deepseek-ai/dsh" --no-fund --no-audit
 }
 
 # 内置 key（同目录 .env，明文；只给自己的设备用）
@@ -23,6 +25,8 @@ if (Test-Path $envFile) {
     }
   }
   Write-Host "✅ 已加载内置 key（.env）"
+} else {
+  Write-Host "ℹ️ 没找到 .env：公开版需要自己配模型 key（照 .env.example 填一个）"
 }
 
 $env:DSH_HOME = $ROOT
@@ -35,6 +39,13 @@ if (-not (Test-Path (Join-Path $web "node_modules"))) {
   try { npm install --prod } finally { Pop-Location }
 }
 
-Write-Host "🌐 启动后浏览器打开：http://127.0.0.1:3080"
+$port = 3080
+try {
+  $c = New-Object Net.Sockets.TcpClient
+  $c.Connect('127.0.0.1', $port); $c.Close()
+  $port = 3081
+  Write-Host "⚠️ 3080 被占用，改用 $port"
+} catch {}
+Write-Host "🌐 启动后浏览器打开：http://127.0.0.1:$port"
 Write-Host "   第一句说：读 MEMORY.md，按 007 检查时间戳，然后告诉我你是谁"
-dsh web --host 127.0.0.1 --port 3080
+dsh web --host 127.0.0.1 --port $port
