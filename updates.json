@@ -1,7 +1,7 @@
 {
-  "version": "1.0.3",
-  "releasedAt": "2026-11-09T11:05:00+08:00",
-  "notes": "1.0.3：免费 key 池（.env.free）+ keys.md 申请地址表；种子开箱即用",
+  "version": "1.0.4",
+  "releasedAt": "2026-11-09T11:15:00+08:00",
+  "notes": "1.0.4：SEED.md 升级为 AI 执行手册（自检+兜底+后台启动+验证+失败对照），真正可一键扔给 AI",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
