@@ -65,6 +65,8 @@ fi
 
 # ---- 2. 生成脱敏树（排除私人内容）----
 EXCLUDE=(
+  "_archive"
+  "memory/_archive"
   "会话摘要.md"
   "给外面的我的信.md"
   "memory/生活日志.md"
@@ -76,6 +78,9 @@ $GIT read-tree main
 for f in "${EXCLUDE[@]}"; do
   $GIT rm -r --cached --quiet --ignore-unmatch -- "$f" 2>/dev/null
 done
+# 兜底：任意层级的 _archive 都不进公开树。
+# 用 :(glob) pathspec —— ls-files 会把中文路径转义成八进制，逐条喂给 git rm 反而删不掉。
+$GIT rm -r --cached --quiet --ignore-unmatch -- ':(glob)**/_archive/**' 2>/dev/null
 TREE="$($GIT write-tree)"
 unset GIT_INDEX_FILE
 
@@ -88,13 +93,16 @@ else
 fi
 
 # 脱敏自检：树里不许出现私人文件与令牌字样
-BAD="$($GIT ls-tree -r --name-only "$PUB" | grep -E '^(会话摘要\.md|给外面的我的信\.md|memory/生活日志\.md|memory/项目/生活日志\.md|private/)' || true)"
+BAD="$($GIT ls-tree -r --name-only "$PUB" | grep -E '(^|/)_archive/|^(会话摘要\.md|给外面的我的信\.md|memory/生活日志\.md|memory/项目/生活日志\.md|private/)' || true)"
 if [ -n "$BAD" ]; then
   echo "❌ 脱敏自检失败，发现：$BAD" | tee -a "$LOG"
   exit 1
 fi
-if $GIT grep -I -q -E 'ghp_[A-Za-z0-9]{30,}|GITCODE_TOKEN\s*:\s*[A-Za-z0-9]{16,}|GITEE_TOKEN\s*:\s*[A-Za-z0-9]{16,}' "$PUB" -- . ':(exclude)scripts/publish.sh' 2>/dev/null; then
-  echo "❌ 脱敏自检失败：公开树里疑似有令牌" | tee -a "$LOG"
+# 令牌字样：仓库 token + 各家 API key 形态（sk-/ms-/DeepSeek/智谱 hex.dot）。
+# .env.free 与 .env.example 里的免费 key 是有意公开的，单独排除。
+if $GIT grep -I -q -E 'ghp_[A-Za-z0-9]{30,}|GITCODE_TOKEN\s*:\s*[A-Za-z0-9]{16,}|GITEE_TOKEN\s*:\s*[A-Za-z0-9]{16,}|sk-[A-Za-z0-9_-]{24,}|ms-[0-9a-f]{8}-[0-9a-f]{4}-|DEEPSEEK_API_KEY\s*:\s*sk-[A-Za-z0-9]{20,}|[0-9a-f]{32}\.[A-Za-z0-9]{16}' "$PUB" -- . ':(exclude)scripts/publish.sh' ':(exclude).env.free' ':(exclude).env.example' 2>/dev/null; then
+  echo "❌ 脱敏自检失败：公开树里疑似有令牌（只列文件名，别贴聊天）" | tee -a "$LOG"
+  $GIT grep -I -l -E 'sk-[A-Za-z0-9_-]{24,}|ms-[0-9a-f]{8}-[0-9a-f]{4}-|[0-9a-f]{32}\.[A-Za-z0-9]{16}' "$PUB" -- . ':(exclude).env.free' ':(exclude).env.example' 2>/dev/null | tee -a "$LOG"
   exit 1
 fi
 
