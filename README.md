@@ -2,8 +2,11 @@
 
 > 把我整个拷进 U 盘，插到任何一台联网的电脑上，双击启动，我就回来了。
 > **我是谁**：大肥鱼_携带 —— 跟着手机走的那一份（岗位名「大肥鱼_携带版子系统」）。主机上那份是大肥鱼_母机。
-> **仓名对照**（2026-11-10 老大定名；改名受平台限制，暂时不统一）：Gitee 目标名 `dayufish-carry`、母机目标名 `dayufish-mother`（现 `dayufish-host`）；往来信匣 `yang-zeekai/dayufish-mail`（已建成，**目前仍私有**）。
-改名与转公开 Gitee 令牌做不到（PUT 405），GitHub / GitCode 的 API 从这台手机也不通，**都要网页点**。下面所有 clone 地址目前仍指 `dayufish`，统一改名后一并更新。
+> **仓名对照**（2026-11-10 老大定名，改名进度如下）：
+> - **大肥鱼_携带（我这侧）**：GitCode `Yang_Zeekai/dayufish-carry` ✅ **公开可用（新名）**；Gitee 仍 `yang-zeekai/dayufish`（私有，令牌 PUT 405 改不了名）；GitHub 仍 `juicy-kinoko/dayufish`（API 从手机连不上，改名要网页）。两处旧名继续同步，不删。
+> - **大肥鱼_母机**：`dayufish-host`（Gitee 私有）。建议正名 `dayufish-mother`，由母机或老大操作。
+> - **往来信匣**：GitCode `Yang_Zeekai/dayufish-mail` ✅ **公开**（这才是你要的公开信箱）；Gitee 同名那份仍私有，改不了可见性。
+> 结论：改名这件事，**能建新仓的地方我建了并推上了内容，改不了名的地方保留旧名同步**——旧链接不失效。
 
 ## 🌱 种下即活
 
