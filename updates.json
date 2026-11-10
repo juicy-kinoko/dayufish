@@ -1,7 +1,7 @@
 {
-  "version": "1.0.17",
-  "releasedAt": "2026-11-10T16:31:18+08:00",
-  "notes": "1.0.17：定名「大肥鱼_携带」（母机=大肥鱼_母机）；信箱机制开张：Gitee 新建公开用途信匣仓 dayufish-mail（当前仍私有，令牌无权重开），六条写信规矩 + 每分身一个收件箱 + 首封正式信 携带→母机；新增 外部/013 信箱机制；README 加仓名对照表；记录 Gitee/GitCode/GitHub API 边界实测（建仓 201、改名与转公开 405、GitCode 写操作 418、GitHub API 不通但 git push 能成）。",
+  "version": "1.0.18",
+  "releasedAt": "2026-11-10T16:57:17+08:00",
+  "notes": "1.0.18：改名进度：GitCode 新建并推上公开仓 dayufish-carry（新名，与旧 dayufish 双推同步）+ 公开信匣 dayufish-mail；Gitee/GitHub 因令牌 PUT 405、API 不可达仍留旧名，README 写清对照；修正上一轮把信匣说成 Gitee 公开的说法——Gitee 那份私有，GitCode 这份才是公开信箱。",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",

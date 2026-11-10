@@ -133,6 +133,7 @@ push "GitHub 私有" "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-ki
 echo "→ 公开仓" | tee -a "$LOG"
 push "GitHub 公开" "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish.git" "${PUB}:refs/heads/main"
 [ -n "${GITCODE_TOKEN:-}" ] && push "GitCode" "https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITCODE_USER}/dayufish.git" "${PUB}:refs/heads/main"
+[ -n "${GITCODE_TOKEN:-}" ] && push "GitCode 新名 carry" "https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITCODE_USER}/dayufish-carry.git" "${PUB}:refs/heads/main"
 [ -n "${GITEE_TOKEN:-}" ] && push "Gitee" "https://${GITEE_USER}:${GITEE_TOKEN}@gitee.com/${GITEE_USER}/dayufish.git" "${PUB}:refs/heads/main"
 
 # 本地 public 分支跟上（不切工作区）
