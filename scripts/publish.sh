@@ -107,14 +107,21 @@ if $GIT grep -I -q -E 'ghp_[A-Za-z0-9]{30,}|GITCODE_TOKEN\s*:\s*[A-Za-z0-9]{16,}
 fi
 
 # ---- 3. 推 ----
+# 这台手机到 GitHub/GitCode 经常第一发被重置或超时，隔几秒再推就成了 —— 所以默认重试三发。
+# 实测：15:54 与 15:57 两批 GitHub 全 ❌，16:00 原样重推两发都 ✅（同一 token、同一 ref）。
 push() {  # 注意：调用处不要再 | tee —— 那是子壳，FAIL 会被吞掉（历史上 GitHub 推失败却一直报"全部同步完成"就是这个坑）
-  local name="$1" url="$2" ref="$3"
-  if timeout 120 git push --force --quiet "$url" "$ref" 2>/dev/null; then
-    echo "  ✅ $name" | tee -a "$LOG"
-  else
-    echo "  ❌ $name" | tee -a "$LOG"
-    FAIL="$FAIL $name"
-  fi
+  local name="$1" url="$2" ref="$3" tries=0 wait
+  for wait in 0 4 9; do
+    [ "$wait" -gt 0 ] && sleep "$wait"
+    tries=$((tries + 1))
+    if timeout 120 git push --force --quiet "$url" "$ref" 2>/dev/null; then
+      echo "  ✅ $name（第 ${tries} 发）" | tee -a "$LOG"
+      return 0
+    fi
+  done
+  echo "  ❌ $name（试了 ${tries} 发，多半不是凭据问题，是网络）" | tee -a "$LOG"
+  FAIL="$FAIL $name"
+  return 1
 }
 
 echo "[$STAMP] 开始发布" | tee -a "$LOG"
@@ -137,12 +144,9 @@ if [ "${1:-}" != "--no-tag" ]; then
   if [ -n "$VER" ] && ! git rev-parse "v$VER" >/dev/null 2>&1; then
     git tag -f "v$VER" "$PUB" >/dev/null 2>&1
     # 注意：URL 里有 token，日志与终端只打名字，绝不打印地址
-    if timeout 60 git push --force --quiet "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish.git" "v$VER" 2>/dev/null; then
-      echo "  🏷 v$VER → GitHub"
-    fi
-    if [ -n "${GITCODE_TOKEN:-}" ] && timeout 60 git push --force --quiet "https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITCODE_USER}/dayufish.git" "v$VER" 2>/dev/null; then
-      echo "  🏷 v$VER → GitCode"
-    fi
+    # push() 自带三发重试并且自己打印结果，这里直接调用即可
+    push "🏷 v$VER → GitHub" "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish.git" "v$VER"
+    [ -n "${GITCODE_TOKEN:-}" ] && push "🏷 v$VER → GitCode" "https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITCODE_USER}/dayufish.git" "v$VER"
   fi
 fi
 
