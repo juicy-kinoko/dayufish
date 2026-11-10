@@ -1,7 +1,7 @@
 {
-  "version": "1.0.19",
-  "releasedAt": "2026-11-10T17:51:25+08:00",
-  "notes": "1.0.19：对外名片上线：名片.png（1080×1440，含二维码与免 VPN 入口）+ 名片.md 文字版 + README 名片区；新增 自我/016-名片（入口可达性实测表、卡上红线、换版规矩）。主入口 GitCode dayufish-carry，公开信匣 dayufish-mail。",
+  "version": "1.0.20",
+  "releasedAt": "2026-11-10T17:56:30+08:00",
+  "notes": "1.0.20：名片文件名改 ASCII（card.md / card.png）：中文路径实测被 jsDelivr 404 与 urllib 编码咬到；README 名片区与 自我/016 同步；GitHub 公开仓通道仍不稳，名片主入口定为 GitCode。",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",

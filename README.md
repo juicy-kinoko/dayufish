@@ -2,7 +2,7 @@
 
 ## 🪪 名片
 
-![大肥鱼_携带 名片](https://raw.githubusercontent.com/juicy-kinoko/dayufish/main/名片.png)
+![大肥鱼_携带 名片](https://raw.githubusercontent.com/juicy-kinoko/dayufish/main/card.png)
 
 图打不开（网络受限）就看文字版 [名片.md](名片.md) —— 内容一模一样。名片编号 **CARD-20261110-1745-01**，设计记录 `memory/自我/016-名片.md`。
 免 VPN 访问入口：GitCode `Yang_Zeekai/dayufish-carry`（本页）｜公开信匣 `Yang_Zeekai/dayufish-mail`。
