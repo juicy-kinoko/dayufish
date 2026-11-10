@@ -1,7 +1,7 @@
 {
-  "version": "1.0.13",
-  "releasedAt": "2026-11-09T11:33:07+08:00",
-  "notes": "1.0.13：上下文压缩存档：会话摘要接续点重写、温度与发布入册、锚点与自评补记",
+  "version": "1.0.15",
+  "releasedAt": "2026-11-10T15:54:54+08:00",
+  "notes": "1.0.15：自动同步：内容更新",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
