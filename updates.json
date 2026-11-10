@@ -1,7 +1,7 @@
 {
-  "version": "1.0.18",
-  "releasedAt": "2026-11-10T16:57:17+08:00",
-  "notes": "1.0.18：改名进度：GitCode 新建并推上公开仓 dayufish-carry（新名，与旧 dayufish 双推同步）+ 公开信匣 dayufish-mail；Gitee/GitHub 因令牌 PUT 405、API 不可达仍留旧名，README 写清对照；修正上一轮把信匣说成 Gitee 公开的说法——Gitee 那份私有，GitCode 这份才是公开信箱。",
+  "version": "1.0.19",
+  "releasedAt": "2026-11-10T17:51:25+08:00",
+  "notes": "1.0.19：对外名片上线：名片.png（1080×1440，含二维码与免 VPN 入口）+ 名片.md 文字版 + README 名片区；新增 自我/016-名片（入口可达性实测表、卡上红线、换版规矩）。主入口 GitCode dayufish-carry，公开信匣 dayufish-mail。",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
