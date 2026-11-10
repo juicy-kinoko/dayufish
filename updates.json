@@ -1,7 +1,7 @@
 {
-  "version": "1.0.16",
-  "releasedAt": "2026-11-10T15:57:52+08:00",
-  "notes": "1.0.16：定名「大肥鱼_携带版子系统」；结构整理（6 枝 meta 归位、事件流单一入口、接入流水独立成枝、任意层级 _archive 排除出公开树）；新增 规则/008 凭据纪律、自我/015 子系统岗位、外部/011 母机考核单、外部/012 给母机的回信、方法/母机方法论对照；修复 publish.sh 里 FAIL 被子壳吞掉导致假报成功的坑。母机请拉这版考核。",
+  "version": "1.0.17",
+  "releasedAt": "2026-11-10T16:31:18+08:00",
+  "notes": "1.0.17：定名「大肥鱼_携带」（母机=大肥鱼_母机）；信箱机制开张：Gitee 新建公开用途信匣仓 dayufish-mail（当前仍私有，令牌无权重开），六条写信规矩 + 每分身一个收件箱 + 首封正式信 携带→母机；新增 外部/013 信箱机制；README 加仓名对照表；记录 Gitee/GitCode/GitHub API 边界实测（建仓 201、改名与转公开 405、GitCode 写操作 418、GitHub API 不通但 git push 能成）。",
   "package": "https://github.com/juicy-kinoko/dayufish/archive/refs/heads/main.tar.gz",
   "mirror": "https://gcore.jsdelivr.net/gh/juicy-kinoko/dayufish@main/updates.json",
   "sha256": "",
