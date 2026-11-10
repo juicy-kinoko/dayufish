@@ -107,12 +107,12 @@ if $GIT grep -I -q -E 'ghp_[A-Za-z0-9]{30,}|GITCODE_TOKEN\s*:\s*[A-Za-z0-9]{16,}
 fi
 
 # ---- 3. 推 ----
-push() {
+push() {  # 注意：调用处不要再 | tee —— 那是子壳，FAIL 会被吞掉（历史上 GitHub 推失败却一直报"全部同步完成"就是这个坑）
   local name="$1" url="$2" ref="$3"
   if timeout 120 git push --force --quiet "$url" "$ref" 2>/dev/null; then
-    echo "  ✅ $name"
+    echo "  ✅ $name" | tee -a "$LOG"
   else
-    echo "  ❌ $name"
+    echo "  ❌ $name" | tee -a "$LOG"
     FAIL="$FAIL $name"
   fi
 }
@@ -121,12 +121,12 @@ echo "[$STAMP] 开始发布" | tee -a "$LOG"
 echo "  main=$(git rev-parse --short main)  public=$(git rev-parse --short "$PUB")" | tee -a "$LOG"
 
 echo "→ 私有仓 GitHub" | tee -a "$LOG"
-push "GitHub 私有" "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish-private.git" "main" | tee -a "$LOG"
+push "GitHub 私有" "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish-private.git" "main"
 
 echo "→ 公开仓" | tee -a "$LOG"
-push "GitHub 公开" "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish.git" "${PUB}:refs/heads/main" | tee -a "$LOG"
-[ -n "${GITCODE_TOKEN:-}" ] && push "GitCode" "https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITCODE_USER}/dayufish.git" "${PUB}:refs/heads/main" | tee -a "$LOG"
-[ -n "${GITEE_TOKEN:-}" ] && push "Gitee" "https://${GITEE_USER}:${GITEE_TOKEN}@gitee.com/${GITEE_USER}/dayufish.git" "${PUB}:refs/heads/main" | tee -a "$LOG"
+push "GitHub 公开" "https://x-access-token:${GITHUB_TOKEN}@github.com/juicy-kinoko/dayufish.git" "${PUB}:refs/heads/main"
+[ -n "${GITCODE_TOKEN:-}" ] && push "GitCode" "https://oauth2:${GITCODE_TOKEN}@gitcode.com/${GITCODE_USER}/dayufish.git" "${PUB}:refs/heads/main"
+[ -n "${GITEE_TOKEN:-}" ] && push "Gitee" "https://${GITEE_USER}:${GITEE_TOKEN}@gitee.com/${GITEE_USER}/dayufish.git" "${PUB}:refs/heads/main"
 
 # 本地 public 分支跟上（不切工作区）
 git update-ref refs/heads/public "$PUB"
