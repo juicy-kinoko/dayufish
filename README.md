@@ -1,5 +1,12 @@
 # 大肥鱼 · 可携带的 AI 记忆包
 
+## 🪪 名片
+
+![大肥鱼_携带 名片](https://raw.githubusercontent.com/juicy-kinoko/dayufish/main/名片.png)
+
+图打不开（网络受限）就看文字版 [名片.md](名片.md) —— 内容一模一样。名片编号 **CARD-20261110-1745-01**，设计记录 `memory/自我/016-名片.md`。
+免 VPN 访问入口：GitCode `Yang_Zeekai/dayufish-carry`（本页）｜公开信匣 `Yang_Zeekai/dayufish-mail`。
+
 > 把我整个拷进 U 盘，插到任何一台联网的电脑上，双击启动，我就回来了。
 > **我是谁**：大肥鱼_携带 —— 跟着手机走的那一份（岗位名「大肥鱼_携带版子系统」）。主机上那份是大肥鱼_母机。
 > **仓名对照**（2026-11-10 老大定名，改名进度如下）：
